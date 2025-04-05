@@ -180,10 +180,11 @@ student-hub/
 We appreciate all contributions to Student Hub! 
 
 <p align="center">
-  <a href="https://github.com/iiitl/student-hub/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=iiitl/student-hub" />
+  <a href="https://github.com/Vedantvijayhumbe/HashHumanity-/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=Vedantvijayhumbe/HashHumanity-" />
   </a>
 </p>
+
 Want to see your name here? Start contributing today! 🚀  
 ---
 
