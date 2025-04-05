@@ -14,7 +14,7 @@ function Navbar() {
       <div className="navbar-inner">
         <div className="navbar-logo">
           <Link to="/" className="logo-text">
-            RefugeID
+            OPENShelter
           </Link>
         </div>
 
