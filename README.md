@@ -63,25 +63,25 @@ Our solution includes:-
 
 ## ✨ Features 
 
-### 📚 Notes & Study Materials  
+### 📚 Identity Verification Mechanism
 - A centralized repository of well-organized notes and study resources for various subjects.  
 - Categorized by topics, subjects, and semesters to make searching easy.  
 - Users can contribute and share their own notes and resources.  
 - Markdown-supported formatting for structured reading.  
 
-### 📖 Quick Reads  
+### 📖 Etherum to Other currency converter 
 - A collection of short, insightful articles and guides for students.  
 - Covers topics like study tips, productivity hacks, career guidance, and academic strategies.  
 - Regularly updated with fresh content.  
 - Mobile-friendly reading experience.  
 
-### 📄 Question Papers Repository  
+### 📄 Micro-Loans via De-Fi  
 - A library of previous years’ question papers for different courses and subjects.  
 - Helps students prepare for exams by providing real past paper formats.  
 - Users can upload and share question papers with the community.  
 - Search and filter options to find relevant papers easily.  
 
-### 🛒 Student Marketplace  
+### 🛒  Status about Verification 
 - A student-to-student platform for buying, selling, and exchanging academic resources.  
 - Users can list books, notes, and study materials for sale or donation.  
 - Secure communication between buyers and sellers.  
@@ -93,23 +93,19 @@ Our solution includes:-
 - Anonymous question-asking feature for students hesitant to post publicly.  
 - Moderated by community admins to maintain quality discussions.  
 
-### 👨‍👩‍👧 Newcomers Section  
-- A dedicated space for new students to navigate their college journey.  
-- Includes a "New Student Guide" with essential information about courses, exams, and resources.  
-- FAQs addressing common concerns of first-year students.  
-- Links to useful university resources and academic calendars.  
-
 ## **🛠 Tech Stack**  
 
 | **Category**  | **Technology Used**  |
 |--------------|-------------------|
 | **Framework**  | Next.js 15.2.2 (Turbopack enabled)  |
 | **UI Library**  | Tailwind CSS 4, Radix UI  |
-| **Database**  | MongoDB with Mongoose ORM  |
+| **IPFS**  | [Pinata  |
 | **Frontend**  | React 19, Next.js API Routes  |
 | **Icons**  | Lucide Icons, React Icons  |
 | **Styling Utilities**  | Tailwind Merge, Class Variance Authority  |
 | **State Management**  | React Hooks, Context API (if applicable)  |
+| **Frontend integration**  | Ethers.js |
+| **Backend**  | Solidity | 
 
 ---
 
