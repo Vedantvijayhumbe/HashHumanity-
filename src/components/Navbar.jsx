@@ -32,7 +32,7 @@ function Navbar() {
           <a href="#join" className="nav-link">
             Join Us
           </a>
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <button className="nav-button">Get Involved</button>
         </div>
 
