@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import ThemeToggle from "./ThemeToggle"
 import "./Navbar.css"
@@ -12,24 +13,29 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <div className="navbar-logo">
-          <span className="logo-text">RefugeID</span>
+          <Link to="/" className="logo-text">
+            RefugeID
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
         <div className="desktop-nav">
-          <a href="#problem" className="nav-link">
+          <a href="/#problem" className="nav-link">
             Problem
           </a>
-          <a href="#solution" className="nav-link">
+          <a href="/#solution" className="nav-link">
             Solution
           </a>
-          <a href="#how-it-works" className="nav-link">
+          <a href="/#how-it-works" className="nav-link">
             How It Works
           </a>
-          <a href="#demo" className="nav-link">
+          <a href="/#demo" className="nav-link">
             Demo
           </a>
-          <a href="#join" className="nav-link">
+          <Link to="/currency-converter" className="nav-link">
+            Currency Converter
+          </Link>
+          <a href="/#join" className="nav-link">
             Join Us
           </a>
           {/* <ThemeToggle /> */}
@@ -49,19 +55,22 @@ function Navbar() {
       {isOpen && (
         <div className="mobile-menu">
           <div className="mobile-menu-inner">
-            <a href="#problem" className="mobile-link" onClick={() => setIsOpen(false)}>
+            <a href="/#problem" className="mobile-link" onClick={() => setIsOpen(false)}>
               Problem
             </a>
-            <a href="#solution" className="mobile-link" onClick={() => setIsOpen(false)}>
+            <a href="/#solution" className="mobile-link" onClick={() => setIsOpen(false)}>
               Solution
             </a>
-            <a href="#how-it-works" className="mobile-link" onClick={() => setIsOpen(false)}>
+            <a href="/#how-it-works" className="mobile-link" onClick={() => setIsOpen(false)}>
               How It Works
             </a>
-            <a href="#demo" className="mobile-link" onClick={() => setIsOpen(false)}>
+            <a href="/#demo" className="mobile-link" onClick={() => setIsOpen(false)}>
               Demo
             </a>
-            <a href="#join" className="mobile-link" onClick={() => setIsOpen(false)}>
+            <Link to="/currency-converter" className="mobile-link" onClick={() => setIsOpen(false)}>
+              Currency Converter
+            </Link>
+            <a href="/#join" className="mobile-link" onClick={() => setIsOpen(false)}>
               Join Us
             </a>
             <button className="mobile-button">Get Involved</button>
