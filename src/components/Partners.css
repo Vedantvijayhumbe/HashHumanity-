@@ -1,0 +1,109 @@
+.partners-section {
+    padding: 80px 0;
+    background-color: #f9fafb;
+  }
+  
+  .partners-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  
+  .partners-heading {
+    font-size: 1.875rem;
+    font-weight: bold;
+    text-align: center;
+    color: #4338ca;
+    margin-bottom: 64px;
+  }
+  
+  .partners-grid-section {
+    margin-bottom: 64px;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  
+  .partner-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo-container {
+    width: 128px;
+    height: 128px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .logo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+  }
+  
+  .logo-text {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #9ca3af;
+  }
+  
+  .partner-type {
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .tech-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .tech-badge {
+    padding: 8px 16px;
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    color: #4338ca;
+  }
+  
+  @media (min-width: 768px) {
+    .partners-heading {
+      font-size: 2.25rem;
+    }
+  
+    .partners-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .partners-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  
+  

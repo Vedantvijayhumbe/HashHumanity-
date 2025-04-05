@@ -1,0 +1,83 @@
+:root {
+  /* Light theme variables */
+  --background: #ffffff;
+  --background-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --primary: #4338ca;
+  --primary-hover: #4f46e5;
+  --primary-light: #eef2ff;
+  --secondary: #0d9488;
+  --secondary-hover: #14b8a6;
+  --secondary-light: #ccfbf1;
+  --border: #e5e7eb;
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --footer-bg: #312e81;
+  --footer-text: #ffffff;
+  --footer-secondary: #c7d2fe;
+}
+
+.dark {
+  /* Dark theme variables */
+  --background: #111827;
+  --background-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-light: #312e81;
+  --secondary: #14b8a6;
+  --secondary-hover: #2dd4bf;
+  --secondary-light: #134e4a;
+  --border: #374151;
+  --card-bg: #1f2937;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --footer-bg: #111827;
+  --footer-text: #f9fafb;
+  --footer-secondary: #9ca3af;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  background-color: var(--background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+/* Fix for canvas rendering */
+canvas {
+  display: block;
+}
+

@@ -1,0 +1,194 @@
+.join-section {
+    padding: 80px 0;
+  }
+  
+  .join-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  
+  .join-heading {
+    font-size: 1.875rem;
+    font-weight: bold;
+    text-align: center;
+    color: #4338ca;
+    margin-bottom: 16px;
+  }
+  
+  .join-subheading {
+    font-size: 1.25rem;
+    text-align: center;
+    color: #4b5563;
+    max-width: 768px;
+    margin: 0 auto 48px;
+  }
+  
+  .join-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+  
+  .join-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f3f4f6;
+    transition: all 0.3s;
+  }
+  
+  .join-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+  }
+  
+  .join-icon-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  
+  .join-icon-circle {
+    padding: 12px;
+    border-radius: 9999px;
+  }
+  
+  .join-icon-circle.indigo {
+    background-color: #eef2ff;
+  }
+  
+  .join-icon-circle.teal {
+    background-color: #ccfbf1;
+  }
+  
+  .join-icon.indigo {
+    color: #4338ca;
+  }
+  
+  .join-icon.teal {
+    color: #0d9488;
+  }
+  
+  .join-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  
+  .join-card-text {
+    color: #4b5563;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  .join-button {
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+  }
+  
+  .join-button.primary {
+    background-color: #4338ca;
+    color: white;
+  }
+  
+  .join-button.primary:hover {
+    background-color: #4f46e5;
+  }
+  
+  .join-button.teal {
+    background-color: #0d9488;
+    color: white;
+  }
+  
+  .join-button.teal:hover {
+    background-color: #14b8a6;
+  }
+  
+  .join-button.gray {
+    background-color: #4b5563;
+    color: white;
+  }
+  
+  .join-button.gray:hover {
+    background-color: #6b7280;
+  }
+  
+  .form-container {
+    max-width: 448px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 4px;
+  }
+  
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  
+  .form-input:focus,
+  .form-select:focus {
+    border-color: #4338ca;
+    box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.2);
+  }
+  
+  .form-button {
+    width: 100%;
+    padding: 8px 0;
+    background-color: #4338ca;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .form-button:hover {
+    background-color: #4f46e5;
+  }
+  
+  @media (min-width: 768px) {
+    .join-heading {
+      font-size: 2.25rem;
+    }
+  
+    .join-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  
