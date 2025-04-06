@@ -2,98 +2,131 @@
 
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import contractABI from "../contract_data/RefugeeFinance.json";
+import contractAddress from "../contract_data/RefugeeFinance-address.json";
+import Navbar from "./Navbar";
+import "./LoanDisbursement.css"; // Import your CSS file
 
-export default function LoanDisbursement({ account, contract, mintedSBT }) {
+export default function LoanDisbursement() {
+  const [nftTokens, setNftTokens] = useState([]);
   const [loanAmount, setLoanAmount] = useState("");
-  const [maxLoan, setMaxLoan] = useState(0.5);
-  const [creditScore, setCreditScore] = useState(0);
-  const [hasActiveLoan, setHasActiveLoan] = useState(false);
+  const [account, setAccount] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const checkEligibility = async () => {
-      if (contract && account && mintedSBT) {
-        try {
-          const score = await contract.creditScore(account);
-          const loanCount = await contract.loans(account).length;
-          const max = await contract.MAX_LOAN();
-          
-          setCreditScore(Number(score));
-          setHasActiveLoan(loanCount > 0);
-          setMaxLoan(Number(ethers.formatEther(max)));
-        } catch (error) {
-          console.error("Error checking eligibility:", error);
-        }
-      }
-    };
-    checkEligibility();
-  }, [contract, account, mintedSBT]);
+  const initializeEthers = async () => {
+    if (!window.ethereum) {
+      alert("Install MetaMask!");
+      return;
+    }
+    
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const loanContract = new ethers.Contract(
+      contractAddress.address,
+      contractABI.abi,
+      signer
+    );
+    
+    setContract(loanContract);
+    const accounts = await provider.listAccounts();
+    setAccount(accounts[0].address);
+  };
 
-  const handleDisburse = async (e) => {
-    e.preventDefault();
+  const mintNFT = async () => {
+    setLoading(true);
     try {
-      const amountWei = ethers.parseEther(loanAmount);
-      const tx = await contract.requestLoan(amountWei);
+      const tx = await contract.mintNFT(account);
       await tx.wait();
-      alert("Loan disbursed successfully!");
-      setHasActiveLoan(true);
+      const tokenId = await contract.getLastTokenId();
+      setNftTokens([...nftTokens, tokenId.toString()]);
     } catch (error) {
-      console.error("Disbursement failed:", error);
-      alert(`Error: ${error.reason || "Check console for details"}`);
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
+  // Updated to call contract.requestLoan from the Solidity file
+  const requestLoan = async () => {
+    if (!contract) return;
+    if (parseFloat(loanAmount) > 0.5) {
+      alert("Please request loan below 0.5 ETH");
+      return;
+    }
+
+    try {
+      const tx = await contract.requestLoan(ethers.parseEther(loanAmount));
+      await tx.wait();
+      
+      // Store in borrowing history
+      const history = JSON.parse(localStorage.getItem("borrowingHistory") || "[]");
+      history.push({
+        tokenId: nftTokens[nftTokens.length - 1],
+        amount: loanAmount,
+        status: "Active",
+        date: new Date().toISOString()
+      });
+      localStorage.setItem("borrowingHistory", JSON.stringify(history));
+      
+      alert(`Loan of ${loanAmount} ETH granted to ${account}!`);
+      setLoanAmount("");
+    } catch (error) {
+      console.error(error);
     }
   };
 
+  useEffect(() => {
+    initializeEthers();
+  }, []);
+
   return (
-    <div className="loan-container">
-      <h2>Loan Disbursement</h2>
-      
-      {!mintedSBT ? (
-        <div className="verification-required">
-          <h3>Verification Required 🔒</h3>
-          <p>Complete these steps to access loans:</p>
-          <ol className="steps">
-            <li>Submit all required documents</li>
-            <li>Get verified by an administrator</li>
-            <li>Mint your verification SBT</li>
-          </ol>
-        </div>
-      ) : hasActiveLoan ? (
-        <div className="active-loan-warning">
-          <h3>Active Loan Detected</h3>
-          <p>You must repay your current loan before requesting a new one.</p>
-        </div>
-      ) : (
-        <>
-          <div className="loan-status">
-            <p>Your Credit Score: {creditScore}</p>
-            <p>Maximum Loan Amount: {maxLoan} ETH</p>
+    <div className="loan-disbursement-page">
+      <Navbar />
+      <div className="container">
+        <div className="card">
+          <h2 className="card-title">Loan Disbursement</h2>
+          
+          <div className="section">
+            <button 
+              onClick={mintNFT}
+              className="mint-button"
+              disabled={loading}
+            >
+              {loading ? "Minting..." : "Mint Collateral NFT"}
+            </button>
+            <div className="nft-tokens">
+              <h3>Your NFT Tokens:</h3>
+              <div className="tokens-list">
+                {nftTokens.length === 0 && (
+                  <span className="no-tokens">No tokens minted yet.</span>
+                )}
+                {nftTokens.map(token => (
+                  <span key={token} className="token-badge">
+                    Token #{token}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <form onSubmit={handleDisburse} className="loan-form">
+          <div className="section">
             <input
               type="number"
               step="0.01"
-              min="0.01"
-              max={maxLoan}
               value={loanAmount}
               onChange={(e) => setLoanAmount(e.target.value)}
-              placeholder="Enter amount in ETH"
-              required
+              placeholder="Loan amount in ETH (Max 0.5)"
+              className="loan-input"
             />
-            <button type="submit" className="disburse-btn">
+            <button
+              onClick={requestLoan}
+              className="loan-button"
+            >
               Request Loan
             </button>
-          </form>
-
-          <div className="terms">
-            <h4>Loan Terms</h4>
-            <ul>
-              <li>0% Interest Rate</li>
-              <li>30 Day Repayment Period</li>
-              <li>Late repayments affect credit score</li>
-            </ul>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
