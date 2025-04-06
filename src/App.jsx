@@ -14,6 +14,7 @@ import Footer from "./components/Footer"
 import CurrencyConverterPage from "./pages/CurrencyConverterPage"
 import Profile from "./components/ProfilePage"
 import "./App.css"
+import HoverDropdown from "./components/HoverDropDown"
 
 function App() {
   const [mounted, setMounted] = useState(false)
@@ -32,6 +33,7 @@ function App() {
       <Routes>
         <Route path="/currency-converter" element={<CurrencyConverterPage />} />
         <Route path="/profile" element={<Profile/>} />
+        <Route path="/transaction" element={<transaction-history/>} />
         <Route
           path="/"
           element={
