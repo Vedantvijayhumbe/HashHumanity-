@@ -41,7 +41,7 @@ export default function Profile() {
       return;
     }
     try {
-      const _provider = new ethers.BrowserProvider(window.ethereum);
+      const _provider = new ethers.JsonRpcProvider("https://lb.drpc.org/ogrpc?network=sepolia&dkey=AlG5D6zvNETUp3IUZlWBmV_ciA3JEskR8JjwKjrWkQAY");
       const _signer = await _provider.getSigner();
       const _contract = new ethers.Contract(
         contractAddress.address,

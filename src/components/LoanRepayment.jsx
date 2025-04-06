@@ -2,103 +2,96 @@
 
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import contractABI from "../contract_data/RefugeeFinance.json";
+import contractAddress from "../contract_data/RefugeeFinance-address.json";
+import Navbar from "./Navbar";
 
-export default function LoanRepayment({ account, contract, mintedSBT, refreshStatus }) {
-  const [repayAmount, setRepayAmount] = useState("");
-  const [activeLoan, setActiveLoan] = useState(null);
-  const [dueAmount, setDueAmount] = useState(0);
+export default function LoanRepayment() {
+  const [tokenId, setTokenId] = useState("");
+  const [amountDue, setAmountDue] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [account, setAccount] = useState(null);
 
-  useEffect(() => {
-    const loadActiveLoan = async () => {
-      if (contract && account && mintedSBT) {
-        try {
-          const loanCount = await contract.loans(account).length;
-          if (loanCount > 0) {
-            const lastLoan = await contract.loans(account, loanCount - 1);
-            if (lastLoan.active) {
-              setActiveLoan({
-                amount: ethers.formatEther(lastLoan.amount),
-                repaid: ethers.formatEther(lastLoan.amountRepaid),
-                dueDate: new Date(Number(lastLoan.dueDate) * 1000)
-              });
-              setDueAmount(ethers.formatEther(lastLoan.amount - lastLoan.amountRepaid));
-            }
-          }
-        } catch (error) {
-          console.error("Error loading loan:", error);
-        }
-      }
-    };
-    loadActiveLoan();
-  }, [contract, account, mintedSBT]);
+  const initializeEthers = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    setContract(new ethers.Contract(contractAddress.address, contractABI.abi, signer));
+    setAccount((await provider.listAccounts())[0].address);
+  };
 
-  const handleRepayment = async (e) => {
-    e.preventDefault();
-    try {
-      const amountWei = ethers.parseEther(repayAmount);
-      const tx = await contract.repayLoan({ value: amountWei });
-      await tx.wait();
-      
-      // Refresh data
-      const loanCount = await contract.loans(account).length;
-      const updatedLoan = await contract.loans(account, loanCount - 1);
-      
-      setActiveLoan({
-        amount: ethers.formatEther(updatedLoan.amount),
-        repaid: ethers.formatEther(updatedLoan.amountRepaid),
-        dueDate: new Date(Number(updatedLoan.dueDate) * 1000)
-      });
-      setDueAmount(ethers.formatEther(updatedLoan.amount - updatedLoan.amountRepaid));
-      setRepayAmount("");
-      refreshStatus();
-      
-      alert("Repayment successful!");
-    } catch (error) {
-      console.error("Repayment failed:", error);
-      alert(`Error: ${error.reason || "Check console for details"}`);
+  const checkLoanDetails = async () => {
+    const history = JSON.parse(localStorage.getItem("borrowingHistory") || "[]");
+    const loan = history.find(item => item.tokenId === tokenId && item.status === "Active");
+    
+    if (loan) {
+      setAmountDue(loan.amount);
+    } else {
+      alert("Invalid token ID or loan already repaid");
     }
   };
 
-  return (
-    <div className="repayment-container">
-      <h2>Loan Repayment</h2>
+  const repayLoan = async () => {
+    try {
+      const tx = await contract.repayLoan(tokenId, {
+        value: ethers.parseEther(amountDue)
+      });
+      await tx.wait();
       
-      {!mintedSBT ? (
-        <div className="verification-required">
-          <h3>Identity Not Verified 🔒</h3>
-          <p>You must complete verification and mint your SBT to access loan services.</p>
-        </div>
-      ) : activeLoan ? (
-        <>
-          <div className="loan-details">
-            <p>Total Amount: {activeLoan.amount} ETH</p>
-            <p>Amount Repaid: {activeLoan.repaid} ETH</p>
-            <p>Due Date: {activeLoan.dueDate.toLocaleDateString()}</p>
-            <p>Amount Due: {dueAmount} ETH</p>
-          </div>
+      // Update history
+      const history = JSON.parse(localStorage.getItem("borrowingHistory"));
+      const updated = history.map(item => 
+        item.tokenId === tokenId ? {...item, status: "Repaid"} : item
+      );
+      localStorage.setItem("borrowingHistory", JSON.stringify(updated));
+      
+      setAmountDue(null);
+      setTokenId("");
+      alert("Loan repaid successfully!");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-          <form onSubmit={handleRepayment} className="repayment-form">
+  useEffect(() => { initializeEthers(); }, []);
+
+  return (
+    <div>
+      <Navbar />
+      <div className="min-h-screen bg-gray-100 p-8">
+        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Loan Repayment</h2>
+          
+          <div className="space-y-6">
             <input
-              type="number"
-              step="0.01"
-              min="0.01"
-              max={dueAmount}
-              value={repayAmount}
-              onChange={(e) => setRepayAmount(e.target.value)}
-              placeholder="Enter repayment amount"
-              required
+              type="text"
+              value={tokenId}
+              onChange={(e) => setTokenId(e.target.value)}
+              placeholder="Enter your NFT Token ID"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <button type="submit" className="repay-btn">
-              Make Payment
+            <button
+              onClick={checkLoanDetails}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Check Loan Details
             </button>
-          </form>
-        </>
-      ) : (
-        <div className="no-loans">
-          <h3>No Active Loans</h3>
-          <p>You don't currently have any outstanding loans.</p>
+
+            {amountDue !== null && (
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-lg font-semibold mb-2">
+                  Amount Due: {amountDue} ETH
+                </p>
+                <button
+                  onClick={repayLoan}
+                  className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Repay Loan
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

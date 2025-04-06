@@ -87,13 +87,12 @@ function Navbar() {
                 minWidth: "180px",
               }}
             >
-              <Link to="/transaction/Loan_Disrubment" style={linkStyle}>
-                Loan Disrubment
+              <Link to="/components/LoanDisbursement" style={linkStyle}> Loan Disrubment
               </Link>
-              <Link to="/transaction/Previous" style={linkStyle}>
+              <Link to="/components/borrowings" style={linkStyle}>
                 Previous Borrowings
               </Link>
-              <Link to="/transaction/Loan_Repayment" style={linkStyle}>
+              <Link to="/components/LoanRepayment" style={linkStyle}>
                 Loan Repayment
               </Link>
             </div>

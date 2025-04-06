@@ -1,0 +1,121 @@
+/* LoanDisbursement.css */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+  }
+  
+  /* Page container */
+  .loan-disbursement-page {
+    min-height: 100vh;
+    background: #e9ecef;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  /* Card styling */
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Card title */
+  .card-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #444;
+  }
+  
+  /* Section styling */
+  .section {
+    margin-bottom: 2rem;
+  }
+  
+  /* NFT button styling */
+  .mint-button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #6a1b9a;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .mint-button:hover {
+    background: #4a148c;
+  }
+  
+  /* NFT tokens list */
+  .nft-tokens {
+    margin-top: 1rem;
+  }
+  
+  .nft-tokens h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .tokens-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .token-badge {
+    background: #d1c4e9;
+    color: #4a148c;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+  
+  .no-tokens {
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  /* Loan request input and button */
+  .loan-input {
+    width: calc(100% - 20px);
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+  
+  .loan-input:focus {
+    outline: none;
+    border-color: #388e3c;
+  }
+  
+  .loan-button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #388e3c;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .loan-button:hover {
+    background: #2e7d32;
+  }
+  
