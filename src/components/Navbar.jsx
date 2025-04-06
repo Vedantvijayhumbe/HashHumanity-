@@ -66,6 +66,9 @@ function Navbar() {
           <Link to="/currency-converter" className="nav-link">
             Currency Converter
           </Link>
+          <Link to="/visa" className="mobile-link" onClick={() => setIsOpen(false)}>
+            Visa
+          </Link>
 
           {/* Transaction History with Dropdown */}
           <div

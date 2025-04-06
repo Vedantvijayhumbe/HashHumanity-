@@ -13,6 +13,7 @@ import JoinMovement from "./components/JoinMovement"
 import Footer from "./components/Footer"
 import CurrencyConverterPage from "./pages/CurrencyConverterPage"
 import Profile from "./components/ProfilePage"
+import Visa from "./components/VisaDashboard"
 import "./App.css"
 import HoverDropdown from "./components/HoverDropDown"
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/currency-converter" element={<CurrencyConverterPage />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/transaction" element={<transaction-history/>} />
+        <Route path="/visa" element={<Visa/>} />
         <Route
           path="/"
           element={
