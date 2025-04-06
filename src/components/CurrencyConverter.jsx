@@ -17,7 +17,7 @@ const CURRENCIES = [
     { code: "CHF", name: "Swiss Franc", symbol: "Fr", flag: "🇨🇭" },
 ]
 
-function CurrencyConverter() {
+const CurrencyConverter = () => {
     const [ethAmount, setEthAmount] = useState(1)
     const [ethPrice, setEthPrice] = useState(null)
     const [exchangeRates, setExchangeRates] = useState({})
@@ -27,51 +27,52 @@ function CurrencyConverter() {
 
     const fetchRates = async () => {
         setLoading(true)
+        setError(null)
 
         try {
-        // Fetch ETH to USD price
-        const ethResponse = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd")
-
-
-        if (!ethResponse.ok) {
-            throw new Error("Failed to fetch Ethereum price")
-        }
-
+        // 1. ETH to USD
+        const ethResponse = await fetch(
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        )
+        if (!ethResponse.ok) throw new Error("Failed to fetch ETH price")
         const ethData = await ethResponse.json()
-
-        // console.log("ethData: ",ethData)
-
-        // Check if the response has the expected structure
-        if (!ethData || !ethData.ethereum || !ethData.ethereum.usd) {
-            throw new Error("Invalid response format from CoinGecko API")
-        }
-
-        const ethUsdPrice = ethData.ethereum.usd
+        const ethUsdPrice = ethData?.ethereum?.usd
+        if (!ethUsdPrice) throw new Error("Invalid ETH price response")
         setEthPrice(ethUsdPrice)
 
-        // Fetch USD to other currencies
+        // 2. USD to other currencies - commented out
+        /*
         const currencyCodes = CURRENCIES.map((c) => c.code).join(",")
-        const forexResponse = await fetch(`https://api.exchangerate.host/latest?base=USD&symbols=${currencyCodes}`)
+        const myHeaders = new Headers()
+        myHeaders.append("apikey", import.meta.env.VITE_EXCHANGE_RATE_API_KEY)
 
-        if (!forexResponse.ok) {
-            throw new Error("Failed to fetch currency exchange rates")
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow",
         }
 
+        const forexResponse = await fetch(
+            `https://api.apilayer.com/exchangerates_data/latest?base=USD&symbols=${currencyCodes}`,
+            requestOptions
+        )
+
         const forexData = await forexResponse.json()
+        console.log("forexData:", forexData)
 
-        console.log("forexData: ",forexData)
-
-        // Check if the response has the expected structure
-        if (!forexData || !forexData.rates) {
-            throw new Error("Invalid response format from ExchangeRate API")
+        if (!forexData.success) {
+            throw new Error(forexData.error?.info || "Failed to fetch exchange rates")
         }
 
         setExchangeRates(forexData.rates)
+        */
+
+        // fallback: setting all exchange rates to 1 (so ETH → USD only)
+        setExchangeRates({ USD: 1 })
+
         setLastUpdated(new Date())
-        setError(null) // Clear any previous errors
         } catch (err) {
         console.error("Error fetching rates:", err)
-        // Don't clear previous data on error, just show error message
         setError(err.message || "Failed to fetch exchange rates")
         } finally {
         setLoading(false)
@@ -80,36 +81,26 @@ function CurrencyConverter() {
 
     useEffect(() => {
         fetchRates()
-
-        // Refresh rates every 5 minutes, but only if component is still mounted
         const interval = setInterval(fetchRates, 5 * 60 * 1000)
-
-        // Cleanup function to clear interval when component unmounts
-        return () => {
-        clearInterval(interval)
-        }
+        return () => clearInterval(interval)
     }, [])
 
     const handleAmountChange = (e) => {
         const value = e.target.value
         if (value === "" || !isNaN(value)) {
-        setEthAmount(value === "" ? "" : Number.parseFloat(value))
+        setEthAmount(value === "" ? "" : parseFloat(value))
         }
     }
 
     const formatCurrency = (amount, code) => {
-        if (amount === undefined || amount === null || isNaN(amount)) {
-        return "-"
-        }
-
+        if (amount === undefined || amount === null || isNaN(amount)) return "-"
         try {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: code,
             maximumFractionDigits: 2,
         }).format(amount)
-        } catch (error) {
-        console.error("Error formatting currency:", error)
+        } catch {
         return `${amount.toFixed(2)} ${code}`
         }
     }
@@ -142,9 +133,9 @@ function CurrencyConverter() {
                 </div>
                 </div>
 
-                <button className="refresh-button" onClick={fetchRates} disabled={loading} aria-label="Refresh rates">
+                <button className="refresh-button" onClick={fetchRates} disabled={loading}>
                 <RefreshCw size={20} className={loading ? "spinning" : ""} />
-                <span className="sr-only">Refresh rates</span>
+                <span className="sr-only">Refresh</span>
                 </button>
             </div>
 
@@ -196,8 +187,8 @@ function CurrencyConverter() {
 
             <div className="disclaimer">
             <p>
-                <strong>Disclaimer:</strong> Exchange rates are provided for informational purposes only. Actual rates may
-                vary at the time of transaction. Data is sourced from CoinGecko and ExchangeRate.host APIs.
+                <strong>Disclaimer:</strong> Exchange rates are for informational purposes. Data is sourced from CoinGecko
+                and Apilayer APIs.
             </p>
             </div>
         </div>
@@ -206,4 +197,3 @@ function CurrencyConverter() {
 }
 
 export default CurrencyConverter
-
