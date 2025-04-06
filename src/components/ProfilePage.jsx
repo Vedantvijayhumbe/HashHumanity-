@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import Spline from "@splinetool/react-spline";
+import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { ethers } from "ethers";
+import Lottie from "react-lottie";
 import contractABI from "../contract_data/RefugeeFinance.json";
 import contractAddress from "../contract_data/RefugeeFinance-address.json";
 
@@ -16,30 +18,54 @@ export default function Profile() {
 
   const [showForm, setShowForm] = useState(false);
   const [selectedFileType, setSelectedFileType] = useState("");
-
-  // Form fields
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
-  const [phone, setPhone] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [verifierId, setVerifierId] = useState("");
   const [password, setPassword] = useState("");
   const [showVerificationDetails, setShowVerificationDetails] = useState(false);
-  const [verified, setVerified] = useState(null);
   const [ipfsHash, setIpfsHash] = useState("");
   const [mintedSBT, setMintedSBT] = useState(null);
 
-  const handleFileTypeChange = (e) => {
-    setSelectedFileType(e.target.value);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [country, setCountry] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const [animationData, setAnimationData] = useState(null);
+  const [isLoadingAnimation, setIsLoadingAnimation] = useState(true);
+
+  const isFormValid =
+    fullName && email && country && phone && selectedFileType && selectedFile;
+
+  useEffect(() => {
+    fetch("/animation.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setAnimationData(data);
+        setIsLoadingAnimation(false);
+      })
+      .catch((err) => {
+        console.error("Animation load error:", err);
+        setIsLoadingAnimation(false);
+      });
+  }, []);
+
+  const defaultLottieOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
-  const initializeEthers = async () => {
+  const connectWallet = async () => {
     if (!window.ethereum) {
-      alert("MetaMask not detected!");
+      alert("Please install MetaMask to connect your wallet.");
       return;
     }
+
     try {
       const _provider = new ethers.JsonRpcProvider("https://lb.drpc.org/ogrpc?network=sepolia&dkey=AlG5D6zvNETUp3IUZlWBmV_ciA3JEskR8JjwKjrWkQAY");
       const _signer = await _provider.getSigner();
@@ -48,24 +74,26 @@ export default function Profile() {
         contractABI.abi,
         _signer
       );
-
       const accounts = await _provider.send("eth_requestAccounts", []);
       setAccount(accounts[0]);
-
       setProvider(_provider);
       setSigner(_signer);
       setContract(_contract);
-    } catch (error) {
-      console.error("Error initializing ethers:", error);
+    } catch (err) {
+      console.error("Error connecting wallet:", err);
     }
+  };
+
+  const handleFileTypeChange = (e) => {
+    setSelectedFileType(e.target.value);
+    setSelectedFile(null); // Reset file when file type changes
   };
 
   const handleAdminSubmit = () => {
     if (verifierId && password) {
       setShowVerificationDetails(true);
-      setVerified(null);
     } else {
-      alert("Please enter Verifier ID and Password.");
+      alert("Please enter both Verifier ID and Password.");
     }
   };
 
@@ -74,202 +102,157 @@ export default function Profile() {
     setShowVerificationDetails(false);
     setVerifierId("");
     setPassword("");
-    setVerified(null);
     setIpfsHash("");
   };
 
-  // Mint SBT when admin approves document verification
   const mintSBT = async () => {
-    if (!contract) return alert("Contract not initialized!");
-    if (!account) return alert("No user account detected!");
-    if (!ipfsHash) return alert("Please enter an IPFS hash for the document!");
+    if (!contract || !account || !ipfsHash) {
+      alert("Missing contract/account/IPFS hash.");
+      return;
+    }
+
     try {
-      console.log(account, ipfsHash)
       const tx = await contract.registerRefugee(account, ipfsHash);
       await tx.wait();
-      // After minting, query the contract for the user's SBT (document hash)
-      const sbtValue = await contract.getUserDocument(account);
-      setMintedSBT(sbtValue);
+      const sbtHash = await contract.getUserDocument(account);
+      setMintedSBT(sbtHash);
       alert("SBT minted successfully!");
-    } catch (error) {
-      console.error("Minting failed:", error);
-      alert("Minting failed, please check the console for details.");
+    } catch (err) {
+      console.error("Minting error:", err);
+      alert("Error minting SBT.");
     }
   };
 
-  // Only show the Connect Wallet button if all form details are filled
-  const formDetailsFilled = fullName && email && country && phone;
-
   return (
-    <div className="profile-app">
-      {!showForm ? (
-        <div className="initial-view">
-          <h1>Welcome!</h1>
-          <p>Join our network to get started.</p>
-          <button className="btn btn-primary start-btn" onClick={() => setShowForm(true)}>
-            Get Involved
-          </button>
+    <>
+      <div className="container">
+        <div className="left-div">
+          <Spline scene="https://prod.spline.design/6dOn5XExlRxxr-D5/scene.splinecode" />
         </div>
-      ) : (
-        <div className="form-card">
-          <div className="profile-icon-container">
-            <FaUserCircle className="profile-icon" />
-          </div>
-          <h2>Join the Network</h2>
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="input-field"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="input-field"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <select
-            className="input-field"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-          >
-            <option value="">Select Country</option>
-            <option value="us">🇺🇸 United States</option>
-            <option value="in">🇮🇳 India</option>
-            <option value="uk">🇬🇧 United Kingdom</option>
-            <option value="fr">🇫🇷 France</option>
-            <option value="de">🇩🇪 Germany</option>
-          </select>
-          <input
-            type="tel"
-            placeholder="Phone Number (+ Country Code)"
-            className="input-field"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
 
-          {formDetailsFilled && (
-            <button className="btn btn-secondary wallet-btn" onClick={initializeEthers}>
-              {account
-                ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`
-                : "Connect Wallet"}
-            </button>
-          )}
+        <div className="right-div">
+          {!showForm ? (
+            <div className="card">
+              <div className="card-content">
+                <h1 className="card-title">OPENShelter</h1>
+                <p className="card-description">
+                  Decentralized Identity for Refugees
+                </p>
+                <button className="buttonp" onClick={() => setShowForm(true)}>Get Started</button>
+              </div>
+            </div>
+          ) : (
+            <div className="form-container">
+              <FaUserCircle className="profile-icon" />
 
-          <label htmlFor="identityProof" className="input-label">
-            Identity Proof:
-          </label>
-          <select
-            id="identityProof"
-            className="input-field"
-            onChange={handleFileTypeChange}
-            value={selectedFileType}
-          >
-            <option value="">Choose Identity Proof Type</option>
-            <option value="DL">Driving License</option>
-            <option value="PP">Passport</option>
-            <option value="VID">Valid Identity Proof</option>
-          </select>
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
 
-          {selectedFileType && (
-            <>
-              <label htmlFor="fileUpload" className="input-label">
-                Upload {selectedFileType}:
-              </label>
-              <input id="fileUpload" type="file" className="input-field file-input" />
-            </>
-          )}
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-          <button className="btn btn-admin admin-btn" onClick={() => setShowAdminModal(true)}>
-            Go to Admin Page
-          </button>
+              <select value={country} onChange={(e) => setCountry(e.target.value)}>
+                <option value="">Select Country</option>
+                <option>India</option>
+                <option>USA</option>
+              </select>
 
-          {/* If SBT has been minted, display the SBT value block */}
-          {mintedSBT && (
-            <div className="sbt-block">
-              <h3>SBT Value</h3>
-              <p>{mintedSBT}</p>
-              <p className="verified-msg">Verified</p>
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+
+              <button className="buttonp" onClick={connectWallet}>
+                {account
+                  ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`
+                  : "Connect Wallet"}
+              </button>
+
+              <label htmlFor="idtype">Choose ID Type:</label>
+              <select id="idtype" value={selectedFileType} onChange={handleFileTypeChange}>
+                <option value="">Select</option>
+                <option value="passport">Passport</option>
+                <option value="aadhaar">Aadhaar</option>
+              </select>
+
+              {selectedFileType && (
+                <>
+                  <label htmlFor="idupload">Upload {selectedFileType}:</label>
+                  <input
+                    type="file"
+                    id="idupload"
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                  />
+                </>
+              )}
+
+              <button className="buttonp" onClick={() => setShowAdminModal(true)}>Go to Admin Panel</button>
+
+              {isFormValid && (
+                <button className="submit-button" onClick={() => alert("Form submitted!")}>
+                  Submit
+                </button>
+              )}
+
+              {mintedSBT && (
+                <div className="sbt-result">
+                  <p><strong>SBT Hash:</strong> {mintedSBT}</p>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </div>
 
-      {/* Admin Modal */}
+      {/* ADMIN MODAL */}
       {showAdminModal && (
-        <div className="modal-overlay">
-          <div className="modal-content admin-card">
-            <button className="close-btn" onClick={closeAdminModal}>
-              ×
-            </button>
+        <div className="admin-modal">
+          <div className="admin-content">
+            <button className="buttonp" onClick={closeAdminModal}>Close</button>
+
             {!showVerificationDetails ? (
               <>
-                <h3>Admin Access</h3>
+                <h3>Verifier Login</h3>
                 <input
                   type="text"
                   placeholder="Verifier ID"
-                  className="input-field"
                   value={verifierId}
                   onChange={(e) => setVerifierId(e.target.value)}
                 />
                 <input
                   type="password"
                   placeholder="Password"
-                  className="input-field"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="btn btn-primary submit-btn" onClick={handleAdminSubmit}>
-                  Submit
-                </button>
+                <button className="buttonp" onClick={handleAdminSubmit}>Verify</button>
               </>
             ) : (
-              <div className="result-card">
-                <h4>Verification Request</h4>
-                <p>
-                  <strong>ID Number:</strong> 0x9F2A...AbC1
-                </p>
-                <p>
-                  <strong>Document Link:</strong>{" "}
-                  <a href="#" target="_blank" rel="noopener noreferrer">
-                    View Document
-                  </a>
-                </p>
-                <p className="verify-question">Is this document valid?</p>
-                <div className="verify-actions">
-                  <button onClick={() => setVerified(true)} className="btn btn-success verify-btn">
-                    Yes
-                  </button>
-                  <button onClick={() => setVerified(false)} className="btn btn-danger verify-btn no">
-                    No
-                  </button>
-                </div>
-                {verified !== null && (
-                  <p className={`status ${verified ? "status-verified" : "status-rejected"}`}>
-                    Status: {verified ? "✅ Verified" : "❌ Rejected"}
-                  </p>
-                )}
-                {verified && (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="Enter IPFS hash"
-                      className="input-field"
-                      value={ipfsHash}
-                      onChange={(e) => setIpfsHash(e.target.value)}
-                    />
-                    <button className="btn btn-primary mint-btn" onClick={mintSBT}>
-                      Mint SBT
-                    </button>
-                  </>
-                )}
-              </div>
+              <>
+                <h4>Document Verification</h4>
+                <p><strong>Connected User:</strong> {account}</p>
+                <input
+                  type="text"
+                  placeholder="Enter IPFS Hash"
+                  value={ipfsHash}
+                  onChange={(e) => setIpfsHash(e.target.value)}
+                />
+                <button className="buttonp" onClick={mintSBT}>Approve and Mint SBT</button>
+              </>
             )}
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

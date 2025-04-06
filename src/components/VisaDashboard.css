@@ -1,0 +1,80 @@
+/* src/pages/VisaDashboard.css */
+/* Or add these layout rules to App.css if preferred */
+
+.loading-indicator {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.2em;
+    color: var(--text-secondary, #a0a0a0);
+  }
+  
+  .visa-dashboard-layout {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  .visa-dashboard-layout h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  /* Glassmorphism container for the main content */
+  .visa-content-grid {
+    background: var(--glass-bg, rgba(25, 25, 35, 0.6));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    display: grid;
+    gap: 30px;
+     /* Default to single column */
+    grid-template-columns: 1fr;
+  }
+  
+  /* Layout for wider screens */
+  @media (min-width: 900px) {
+    .visa-content-grid {
+      /* Two columns for badge and card, action area spans below */
+      grid-template-columns: 300px 1fr; /* Adjust badge width as needed */
+      grid-template-areas:
+        "badge card"
+        "action action"; /* Define grid areas */
+      align-items: start; /* Align items to the top */
+    }
+  
+    .visa-badge-area {
+      grid-area: badge;
+      display: flex; /* Center badge within its area */
+      justify-content: center;
+    }
+  
+    .visa-card-area {
+      grid-area: card;
+      max-width: 600px; /* Limit card width */
+      justify-self: start; /* Align card to the start of its area */
+    }
+  
+     .visa-action-area {
+       grid-area: action;
+     }
+  
+     .visa-placeholder-area {
+       /* Span both columns if no visa */
+       grid-column: 1 / -1;
+       text-align: center;
+       padding: 40px 0;
+     }
+  }
+  
+  @media (max-width: 899px) {
+     /* Ensure action area is below on smaller screens */
+     .visa-badge-area { order: 1; }
+     .visa-card-area { order: 2; }
+     .visa-action-area { order: 3; }
+     .visa-placeholder-area { order: 1; } /* Show placeholder first */
+  }

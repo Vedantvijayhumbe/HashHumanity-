@@ -1,0 +1,201 @@
+/* src/components/VisaStatusCard.module.css */
+/* Uses CSS Variables defined in your global index.css or App.css */
+
+.card {
+    background: var(--card-bg, rgba(31, 31, 42, 0.8)); /* Fallback color */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    color: var(--text-primary, #e0e0e0); /* Ensure text color is set */
+  }
+  
+  /* Glowing Edge */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: -2px; /* Modern way to set top/left/right/bottom */
+    border-radius: 14px;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, var(--glow-color, rgba(0, 180, 255, 0.6)), var(--accent-color, #00b4ff)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+    z-index: -1;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.4);
+  }
+  
+  .card:hover::before {
+      opacity: 1;
+  }
+  
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  }
+  
+  .profilePic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color, #00b4ff);
+    object-fit: cover;
+    background-color: #333; /* Placeholder bg while image loads */
+  }
+  
+  .headerText {
+      flex-grow: 1;
+  }
+  
+  .name {
+    margin: 0 0 5px 0;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #fff; /* Often good to override specific high-contrast text */
+  }
+  
+  .addressContainer, .hashContainer {
+      display: flex;
+      align-items: center;
+      gap: 8px; /* Increased gap slightly */
+      flex-wrap: nowrap; /* Prevent wrapping */
+      overflow: hidden; /* Hide overflow */
+  }
+  
+  .walletAddress, .fieldValue code {
+    font-size: 0.9em;
+    color: var(--text-secondary, #a0a0a0);
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 5px;
+    border-radius: 3px;
+    white-space: nowrap; /* Prevent code from wrapping */
+    text-overflow: ellipsis; /* Add ellipsis if too long */
+    overflow: hidden;
+    display: inline-block; /* Needed for text-overflow */
+    max-width: 180px; /* Adjust as needed */
+  }
+  
+  .copyButton {
+      background: none;
+      border: none;
+      color: var(--text-secondary, #a0a0a0);
+      cursor: pointer;
+      padding: 2px;
+      font-size: 1em; /* Slightly larger for easier clicking */
+      line-height: 1;
+      flex-shrink: 0; /* Prevent button from shrinking */
+  }
+  .copyButton:hover {
+      color: var(--text-primary, #e0e0e0);
+  }
+  
+  .explorerLink {
+      color: var(--text-secondary, #a0a0a0);
+      text-decoration: none;
+      font-size: 1em; /* Match copy button */
+      flex-shrink: 0;
+  }
+  .explorerLink:hover {
+      color: var(--accent-color, #00b4ff);
+  }
+  
+  .pdfButton {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary, #a0a0a0);
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+      padding: 5px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+  .pdfButton:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary, #e0e0e0);
+  }
+  
+  .cardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .field {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .fieldLabel {
+    font-weight: 500;
+    color: var(--text-secondary, #a0a0a0);
+    font-size: 0.9em;
+    flex-shrink: 0; /* Prevent label from shrinking */
+  }
+  
+  .fieldValue {
+    font-weight: 400;
+    color: var(--text-primary, #e0e0e0);
+    text-align: right;
+    word-break: break-all; /* Allow long values to break */
+  }
+  
+  /* Combined class name usage */
+  .visaType {
+    font-weight: 700;
+    color: var(--accent-color, #00b4ff);
+    background-color: rgba(0, 180, 255, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block; /* Ensure padding is applied correctly */
+  }
+  
+  .cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: var(--text-secondary, #a0a0a0);
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .separator {
+    opacity: 0.5;
+    margin: 0 5px;
+  }
+  
+  .verifiedBadge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--verified-color, #00ffaa);
+    font-weight: 500;
+  }
+  
+  .verifiedIcon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor; /* Inherit color from parent (.verifiedBadge) */
+  }

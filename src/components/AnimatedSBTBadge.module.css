@@ -1,0 +1,111 @@
+/* src/components/AnimatedSBTBadge.module.css */
+
+.badgeContainer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 200px; /* Ensure space even when empty */
+    perspective: 800px; /* Add perspective for 3D rotation */
+  }
+  
+  .badge {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 180, 255, 0.3) 0%, rgba(22, 33, 62, 0.8) 70%);
+    border: 3px solid var(--accent-color, #00b4ff);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 20px 5px rgba(0, 180, 255, 0.3),
+                inset 0 0 15px 2px rgba(0, 180, 255, 0.2);
+    cursor: default;
+    position: relative;
+    overflow: hidden; /* Prevents potential icon overflow */
+    transform-style: preserve-3d; /* Needed for child rotation */
+  }
+  
+  .badgeIcon {
+      font-size: 3em;
+      line-height: 1;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .badgeText {
+      font-size: 0.9em;
+      font-weight: 500;
+      max-width: 90%;
+  }
+  
+  /* Animations - apply as separate classes if needed */
+  .pulseGlow {
+      animation: pulseGlowAnimation 3s infinite alternate ease-in-out;
+  }
+  .rotateBadge {
+       animation: rotateBadgeAnimation 30s infinite linear;
+  }
+  
+  
+  @keyframes pulseGlowAnimation {
+    from {
+      box-shadow: 0 0 15px 3px rgba(0, 180, 255, 0.2), inset 0 0 10px 1px rgba(0, 180, 255, 0.1);
+      /* transform: scale(1); No longer needed if rotate is separate */
+      border-color: rgba(0, 180, 255, 0.7);
+    }
+    to {
+      box-shadow: 0 0 30px 8px rgba(0, 180, 255, 0.5), inset 0 0 20px 3px rgba(0, 180, 255, 0.3);
+      /* transform: scale(1.02); No longer needed if rotate is separate */
+       border-color: rgba(0, 180, 255, 1);
+    }
+  }
+  
+  @keyframes rotateBadgeAnimation {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+  }
+  
+  
+  .metadata {
+    position: absolute;
+    /* Adjust positioning relative to the badge container */
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(10, 10, 20, 0.9); /* Darker, less transparent */
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 0.8em;
+    color: var(--text-secondary, #a0a0a0);
+    width: max-content;
+    min-width: 180px; /* Give it some min width */
+    max-width: 250px;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Use transform for movement */
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  
+  .badgeContainer:hover .metadata {
+    opacity: 1;
+    transform: translateX(-50%) translateY(10px); /* Move down slightly on hover */
+    pointer-events: auto;
+  }
+  
+  .metadata p {
+      margin: 6px 0;
+      line-height: 1.4;
+      white-space: nowrap; /* Prevent wrapping */
+  }
+  .metadata strong {
+      color: var(--text-primary, #e0e0e0);
+      margin-right: 5px;
+  }
