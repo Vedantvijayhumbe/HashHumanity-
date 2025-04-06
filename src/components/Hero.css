@@ -23,6 +23,13 @@
   z-index: 10;
 }
 
+.earth-3dcontainer {
+  margin-top: 40px;
+  position: absolute;
+  size: 120%;
+  background-color: transparent;
+}
+
 .hero-content {
   max-width: 768px;
   margin: 0 auto;

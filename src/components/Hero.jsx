@@ -1,5 +1,5 @@
 "use client"
-
+import Spline from '@splinetool/react-spline'
 import { useEffect, useRef } from "react"
 import "./Hero.css"
 
@@ -98,6 +98,11 @@ function Hero() {
   return (
     <section className="hero-section">
       <canvas ref={canvasRef} className="hero-canvas"></canvas>
+      <div className="earth-3dcontainer">
+          <Spline
+            scene="https://prod.spline.design/0yCkcLsG8cBF4FvH/scene.splinecode" 
+          />
+        </div>
       <div className="hero-container">
         <div className="hero-content">
           <h1 className="hero-heading">Empowering the Stateless with Identity, Trust, and Financial Freedom.</h1>
