@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import ThemeToggle from "./ThemeToggle"
@@ -11,8 +11,33 @@ function Navbar() {
   const navigate = useNavigate()
 
   const handleGetInvolved = () => {
-    setIsOpen(false) // close mobile menu if open
-    navigate("/ProfilePage") // go to profile page
+    setIsOpen(false)
+    navigate("/ProfilePage")
+  }
+
+  // Dropdown hover logic
+  useEffect(() => {
+    const dropdown = document.querySelector(".dropdown")
+    const content = dropdown?.querySelector(".dropdown-content")
+
+    const show = () => content && (content.style.display = "block")
+    const hide = () => content && (content.style.display = "none")
+
+    dropdown?.addEventListener("mouseenter", show)
+    dropdown?.addEventListener("mouseleave", hide)
+
+    return () => {
+      dropdown?.removeEventListener("mouseenter", show)
+      dropdown?.removeEventListener("mouseleave", hide)
+    }
+  }, [])
+
+  const linkStyle = {
+    padding: "10px 14px",
+    textDecoration: "none",
+    display: "block",
+    color: "#333",
+    fontSize: "14px",
   }
 
   return (
@@ -41,6 +66,39 @@ function Navbar() {
           <Link to="/currency-converter" className="nav-link">
             Currency Converter
           </Link>
+
+          {/* Transaction History with Dropdown */}
+          <div
+            className="nav-link dropdown"
+            style={{ position: "relative" }}
+          >
+            Transaction History
+            <div
+              className="dropdown-content"
+              style={{
+                display: "none",
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                backgroundColor: "#fff",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                borderRadius: "6px",
+                zIndex: 1000,
+                minWidth: "180px",
+              }}
+            >
+              <Link to="/transaction/Loan_Disrubment" style={linkStyle}>
+                Loan Disrubment
+              </Link>
+              <Link to="/transaction/Previous" style={linkStyle}>
+                Previous Borrowings
+              </Link>
+              <Link to="/transaction/Loan_Repayment" style={linkStyle}>
+                Loan Repayment
+              </Link>
+            </div>
+          </div>
+
           <a href="/#join" className="nav-link">
             Join Us
           </a>
@@ -76,6 +134,9 @@ function Navbar() {
             </a>
             <Link to="/currency-converter" className="mobile-link" onClick={() => setIsOpen(false)}>
               Currency Converter
+            </Link>
+            <Link to="/transaction" className="mobile-link" onClick={() => setIsOpen(false)}>
+              Transaction History
             </Link>
             <a href="/#join" className="mobile-link" onClick={() => setIsOpen(false)}>
               Join Us
