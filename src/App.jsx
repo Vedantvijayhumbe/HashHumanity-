@@ -12,6 +12,7 @@ import Partners from "./components/Partners"
 import JoinMovement from "./components/JoinMovement"
 import Footer from "./components/Footer"
 import CurrencyConverterPage from "./pages/CurrencyConverterPage"
+import Profile from "./components/ProfilePage"
 import "./App.css"
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/currency-converter" element={<CurrencyConverterPage />} />
+        <Route path="/profile" element={<Profile/>} />
         <Route
           path="/"
           element={
@@ -41,11 +43,11 @@ function App() {
               <DemoPreview />
               <Partners />
               <JoinMovement />
+              <Footer />
             </main>
           }
         />
       </Routes>
-      <Footer />
     </Router>
   )
 }

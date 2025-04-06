@@ -1,13 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import ThemeToggle from "./ThemeToggle"
 import "./Navbar.css"
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
+
+  const handleGetInvolved = () => {
+    setIsOpen(false) // close mobile menu if open
+    navigate("/ProfilePage") // go to profile page
+  }
 
   return (
     <nav className="navbar">
@@ -38,8 +44,9 @@ function Navbar() {
           <a href="/#join" className="nav-link">
             Join Us
           </a>
-          {/* <ThemeToggle /> */}
-          <button className="nav-button">Get Involved</button>
+          <button className="nav-button" onClick={handleGetInvolved}>
+            Get Involved
+          </button>
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -73,7 +80,9 @@ function Navbar() {
             <a href="/#join" className="mobile-link" onClick={() => setIsOpen(false)}>
               Join Us
             </a>
-            <button className="mobile-button">Get Involved</button>
+            <button className="mobile-button" onClick={handleGetInvolved}>
+              Get Involved
+            </button>
           </div>
         </div>
       )}
@@ -82,4 +91,3 @@ function Navbar() {
 }
 
 export default Navbar
-

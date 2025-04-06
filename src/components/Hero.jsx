@@ -1,10 +1,12 @@
 "use client"
-import Spline from '@splinetool/react-spline'
+import Spline from "@splinetool/react-spline"
 import { useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import "./Hero.css"
 
 function Hero() {
   const canvasRef = useRef(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -14,12 +16,10 @@ function Hero() {
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
 
-    // Simple animation of globe with connecting nodes
     const nodes = []
     const connections = []
     const nodeCount = 30
 
-    // Create nodes
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
         x: Math.random() * canvas.width,
@@ -30,7 +30,6 @@ function Hero() {
       })
     }
 
-    // Create connections
     for (let i = 0; i < nodeCount; i++) {
       for (let j = i + 1; j < nodeCount; j++) {
         if (Math.random() > 0.85) {
@@ -42,33 +41,39 @@ function Hero() {
     function drawGlobe() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Draw a subtle globe
       ctx.beginPath()
-      ctx.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) * 0.3, 0, Math.PI * 2)
+      ctx.arc(
+        canvas.width / 2,
+        canvas.height / 2,
+        Math.min(canvas.width, canvas.height) * 0.3,
+        0,
+        Math.PI * 2
+      )
       ctx.strokeStyle = "rgba(99, 102, 241, 0.2)"
       ctx.stroke()
 
-      // Update and draw nodes
       nodes.forEach((node, i) => {
         node.x += node.vx
         node.y += node.vy
 
-        // Bounce off edges
         if (node.x < 0 || node.x > canvas.width) node.vx *= -1
         if (node.y < 0 || node.y > canvas.height) node.vy *= -1
 
-        // Draw node
         ctx.beginPath()
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
-        ctx.fillStyle = i % 3 === 0 ? "rgba(99, 102, 241, 0.7)" : "rgba(20, 184, 166, 0.7)"
+        ctx.fillStyle =
+          i % 3 === 0
+            ? "rgba(99, 102, 241, 0.7)"
+            : "rgba(20, 184, 166, 0.7)"
         ctx.fill()
       })
 
-      // Draw connections
       connections.forEach(([i, j]) => {
         const nodeA = nodes[i]
         const nodeB = nodes[j]
-        const distance = Math.sqrt(Math.pow(nodeA.x - nodeB.x, 2) + Math.pow(nodeA.y - nodeB.y, 2))
+        const distance = Math.sqrt(
+          Math.pow(nodeA.x - nodeB.x, 2) + Math.pow(nodeA.y - nodeB.y, 2)
+        )
 
         if (distance < 100) {
           ctx.beginPath()
@@ -85,7 +90,6 @@ function Hero() {
 
     drawGlobe()
 
-    // Handle resize
     const handleResize = () => {
       canvas.width = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
@@ -95,22 +99,28 @@ function Hero() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
+  const handleGetInvolved = () => {
+    navigate("/profile")
+  }
+
   return (
     <section className="hero-section">
       <canvas ref={canvasRef} className="hero-canvas"></canvas>
       <div className="earth-3dcontainer">
-          <Spline
-            scene="https://prod.spline.design/0yCkcLsG8cBF4FvH/scene.splinecode" 
-          />
-        </div>
+        <Spline scene="https://prod.spline.design/0yCkcLsG8cBF4FvH/scene.splinecode" />
+      </div>
       <div className="hero-container">
         <div className="hero-content">
-          <h1 className="hero-heading">Empowering the Stateless with Identity, Trust, and Financial Freedom.</h1>
+          <h1 className="hero-heading">
+            Empowering the Stateless with Identity, Trust, and Financial Freedom.
+          </h1>
           <p className="hero-subheading">
             A decentralized platform for refugees to regain agency, dignity, and economic power.
           </p>
           <div className="hero-buttons">
-            <button className="hero-button primary">Get Involved</button>
+            <button className="hero-button primary" onClick={handleGetInvolved}>
+              Get Involved
+            </button>
             <button className="hero-button secondary">Explore Identity System</button>
           </div>
         </div>
@@ -120,4 +130,3 @@ function Hero() {
 }
 
 export default Hero
-
